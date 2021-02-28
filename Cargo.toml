@@ -1,0 +1,17 @@
+[package]
+name = "derive-entity"
+version = "0.1.0"
+authors = ["Dr. David A. Kunz <kunz.david.alexander@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dev-dependencies]
+trybuild = { version = "1.0", features = ["diff"] }
+
+[dependencies]
+syn = { version = "1.0.60", features = ["extra-traits"] }
+quote = "1.0.9"
