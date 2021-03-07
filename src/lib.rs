@@ -70,21 +70,3 @@ pub fn derive(input: TokenStream) -> TokenStream {
     };
     result.into()
 }
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-
-    #[test]
-    fn basic() {
-        #[derive(Entity)]
-        struct Books {
-            id: i32,
-            title: String,
-        }
-        let mut query = Entity::select();
-        query.set_limit(200).set_columns(vec!["id", "title"]).set_unique();
-        assert_eq!(query.to_sql(), "selectdistinct id,title from Books limit 300;");
-    }
-}

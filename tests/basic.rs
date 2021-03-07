@@ -1,4 +1,5 @@
 use derive_entity::Entity;
+use entity::{Select,Sql};
 
 #[derive(Entity)]
 pub struct Book {
@@ -11,5 +12,5 @@ pub struct Book {
 fn main() {
     let mut select = Book::select();
     select.set_limit(200).set_unique().set_columns(vec!["id", "title"]);
-    assert_eq!("select id,title,pages,author from Book;", select.to_sql());
+    assert_eq!("select distinct id,title from Book limit 200;", select.to_sql());
 }
