@@ -59,13 +59,13 @@ pub fn derive(input: TokenStream) -> TokenStream {
         fields: fields.iter().filter_map(|field| get_entity_field(field)).collect(),
     };
     let fields: Vec<String> = entity.fields.iter().map(|f| f.name.to_string()).collect();
-    let columns = fields.join(",");
-    let select_string = format!("select {} from {};", &columns, &entity.name);
+    let entity_name = entity.name;
+    // let select_string = format!("select {} from {}", &columns, &entity.name);
 
     let result = quote! {
         impl #ident {
-            pub fn select() -> ::std::string::String {
-                ::std::string::String::from(#select_string)
+            pub fn select() -> entity::Select {
+                entity::Select { entity: #entity_name, columns: vec![ #(#fields),*], ..::std::default::Default::default() }
             }
         }
     };

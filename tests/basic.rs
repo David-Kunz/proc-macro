@@ -1,4 +1,5 @@
 use derive_entity::Entity;
+use entity;
 
 #[derive(Entity)]
 pub struct Book {
@@ -9,6 +10,7 @@ pub struct Book {
 }
 
 fn main() {
-    let select_sql = Book::select();
-    assert_eq!("select id,title,pages,author from Book;", select_sql);
+    let select_options = entity::SelectOptions { limit: 100 };
+    let select_sql = Book::select(&select_options);
+    assert_eq!("select id,title,pages,author from Book limit 100;", select_sql);
 }
