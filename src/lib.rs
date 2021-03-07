@@ -59,13 +59,12 @@ pub fn derive(input: TokenStream) -> TokenStream {
         fields: fields.iter().filter_map(|field| get_entity_field(field)).collect(),
     };
     let fields: Vec<String> = entity.fields.iter().map(|f| f.name.to_string()).collect();
-    let columns = fields.join(",");
-    let select_string = format!("select {} from {};", &columns, &entity.name);
+    let entity_name = entity.name;
 
     let result = quote! {
         impl #ident {
-            pub fn select() -> ::std::string::String {
-                format!("{}", #select_string)
+            pub fn select() -> ::entity::Select {
+                ::entity::Select { entity: #entity_name, columns: vec![#(#fields),*], ..::std::default::Default::default() }
             }
         }
     };
@@ -74,8 +73,18 @@ pub fn derive(input: TokenStream) -> TokenStream {
 
 #[cfg(test)]
 mod tests {
+
+    use super::*;
+
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn basic() {
+        #[derive(Entity)]
+        struct Books {
+            id: i32,
+            title: String,
+        }
+        let mut query = Entity::select();
+        query.set_limit(200).set_columns(vec!["id", "title"]).set_unique();
+        assert_eq!(query.to_sql(), "selectdistinct id,title from Books limit 300;");
     }
 }
